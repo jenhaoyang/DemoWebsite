@@ -6,7 +6,7 @@ var Campground 	= require("./models/campground")
 var seedDB		= require("./seeds")
 
 seedDB();
-mongoose.connect("mongodb://localhost:27017/yepl_camp", {useUnifiedTopology: true, useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/yepl_camp_v3", {useUnifiedTopology: true, useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extend: true}));
 app.set("view engine", "ejs");
 
@@ -65,10 +65,11 @@ app.get("/campgrounds/new",(req,res)=>{
 
 // show
 app.get("/campgrounds/:id",(req,res)=>{
-	Campground.findById(req.params.id, (err, foundCampground)=>{
+	Campground.findById(req.params.id).populate("comments").exec((err, foundCampground)=>{
 		if(err){
 			console.log(err);
 		}else {
+			console.log(foundCampground);
 			res.render("show", {campground: foundCampground});
 		}
 	});
